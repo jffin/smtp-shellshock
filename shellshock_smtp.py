@@ -20,7 +20,7 @@ if(argc < 4 or argc > 4):
     sys.exit(0)
 
 rhost = sys.argv[1]
-rport = sys.argv[2]
+rport = int(sys.argv[2])
 cmd = sys.argv[3]
  
 headers = ([
