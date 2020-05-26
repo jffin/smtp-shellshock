@@ -18,10 +18,10 @@ argc = len(sys.argv)
 if(argc < 3 or argc > 3):
     usage()
     sys.exit(0)
- 
-rport = 25
+
 rhost = sys.argv[1]
-cmd = sys.argv[2]
+rport = sys.argv[2]
+cmd = sys.argv[3]
  
 headers = ([
     "To",
