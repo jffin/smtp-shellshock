@@ -15,7 +15,7 @@ def usage():
     print "shellshock_smtp.py <target> <command>"
  
 argc = len(sys.argv)
-if(argc < 3 or argc > 3):
+if(argc < 4 or argc > 4):
     usage()
     sys.exit(0)
 
